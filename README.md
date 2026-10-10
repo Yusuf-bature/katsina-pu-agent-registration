@@ -20,9 +20,9 @@ Registering agents for about 4,900 polling units across 34 LGAs and 361 wards is
 
 | File | Purpose |
 |------|---------|
-| `src/Code.gs` | Server logic: serves the page, returns LGAs/wards/PUs, validates and saves registrations |
-| `src/Index.html` | Front end: the registration form and client-side logic |
-| `src/Data.gs` | The PU directory as a nested array (LGA > Ward > PUs with codes) |
+| `Code.gs` | Server logic: serves the page, returns LGAs/wards/PUs, validates and saves registrations |
+| `Index.html` | Front end: the registration form and client-side logic |
+| `Data.gs` | The PU directory as a nested array (LGA > Ward > PUs with codes) |
 | `appsscript.json` | Apps Script manifest (time zone, V8 runtime, web app settings) |
 
 ## The data
