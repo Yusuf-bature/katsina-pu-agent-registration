@@ -32,7 +32,7 @@ The PU directory was extracted from an official PDF (the Katsina PU Directory) i
 ## How to run it
 
 1. Create a new project at [script.google.com](https://script.google.com).
-2. Add three files with the same names: `Code.gs`, `Data.gs` and `Index` (an HTML file), and paste in the contents from `src/`.
+2. Add three files with the same names: `Code.gs`, `Data.gs` and `Index` (an HTML file), and paste in the contents from this repo.
 3. Replace the manifest contents with `appsscript.json` (enable "Show appsscript.json" in Project Settings).
 4. Click **Deploy > New deployment > Web app**. Set "Execute as" to Me and choose who has access.
 5. Open the web app URL. The first submission creates the Sheet and Drive folder.
