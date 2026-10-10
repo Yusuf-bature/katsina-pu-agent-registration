@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    :root {
+      --green: #0a8a3d;
+      --green-dark: #066b2e;
+      --border: #d7dbe0;
+      --bg: #f4f6f8;
+      --text: #1f2a30;
+      --muted: #6b7680;
+      --error: #c0392b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px 14px 60px;
+    }
+    .card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      padding: 22px 20px 26px;
+    }
+    h1 {
+      font-size: 19px;
+      margin: 0 0 4px;
+      color: var(--green-dark);
+    }
+    .subtitle {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin: 0 0 20px;
+      line-height: 1.4;
+    }
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 600;
+      margin: 16px 0 6px;
+    }
+    label .opt { color: var(--muted); font-weight: 400; }
+    select, input[type=text], input[type=email], input[type=tel] {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      background: #fff;
+      color: var(--text);
+    }
+    select:disabled {
+      background: #f0f1f3;
+      color: var(--muted);
+    }
+    .radio-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .radio-row label.pill {
+      flex: 1;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 0;
+      font-weight: 500;
+      font-size: 14.5px;
+      margin: 0;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .radio-row input { display: none; }
+    .radio-row input:checked + span {
+      color: #fff;
+    }
+    .radio-row label.pill.selected {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+    .photo-input {
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 14px 12px;
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+    .photo-preview {
+      display: block;
+      max-width: 120px;
+      max-height: 120px;
+      margin: 10px auto 0;
+      border-radius: 8px;
+      display: none;
+    }
+    button#submitBtn {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      font-size: 15.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button#submitBtn:disabled {
+      background: #9bbfa9;
+      cursor: not-allowed;
+    }
+    .msg {
+      margin-top: 14px;
+      font-size: 13.5px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      display: none;
+    }
+    .msg.error { background: #fdeceb; color: var(--error); display: block; }
+    .msg.success { background: #e8f7ee; color: var(--green-dark); display: block; }
+    .field-error { color: var(--error); font-size: 12.5px; margin-top: 4px; display: none; }
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.5);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: -2px;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="card" id="formCard">
+    <h1>Katsina State PU Agent Registration</h1>
+    <p class="subtitle">Select the Local Government Area, Ward, and Polling Unit, then fill in the agent's details. Submit once per agent — twice per Polling Unit (one male, one female).</p>
+
+    <form id="regForm">
+      <label>Local Government Area (LGA)</label>
+      <select id="lga" required>
+        <option value="">Loading LGAs…</option>
+      </select>
+
+      <label>Ward (Registration Area)</label>
+      <select id="ward" required disabled>
+        <option value="">Select LGA first</option>
+      </select>
+
+      <label>Polling Unit (PU)</label>
+      <select id="pu" required disabled>
+        <option value="">Select Ward first</option>
+      </select>
+
+      <label>Full Name</label>
+      <input type="text" id="name" required>
+
+      <label>Phone Number</label>
+      <input type="tel" id="phone" required pattern="^[0-9+ ]{7,15}$">
+      <div class="field-error" id="phoneError">Enter a valid phone number.</div>
+
+      <label>Email Address</label>
+      <input type="email" id="email" required>
+
+      <label>Gender</label>
+      <div class="radio-row" id="genderRow">
+        <label class="pill" data-value="Male"><input type="radio" name="gender" value="Male"><span>Male</span></label>
+        <label class="pill" data-value="Female"><input type="radio" name="gender" value="Female"><span>Female</span></label>
+      </div>
+
+      <label>Voter's ID (VIN)</label>
+      <input type="text" id="voterId" required>
+
+      <label>State</label>
+      <input type="text" id="state" value="Katsina" readonly>
+
+      <label>Upload Photo <span class="opt">(JPG/PNG, max ~4MB)</span></label>
+      <div class="photo-input">
+        <input type="file" id="photo" accept="image/*" required style="width:100%;">
+        <img id="photoPreview" class="photo-preview">
+      </div>
+      <div class="field-error" id="photoError">Photo is required and must be under 4MB.</div>
+
+      <button type="submit" id="submitBtn">Submit Registration</button>
+      <div class="msg" id="resultMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    var lgaSelect = document.getElementById('lga');
+    var wardSelect = document.getElementById('ward');
+    var puSelect = document.getElementById('pu');
+    var form = document.getElementById('regForm');
+    var submitBtn = document.getElementById('submitBtn');
+    var resultMsg = document.getElementById('resultMsg');
+    var photoInput = document.getElementById('photo');
+    var photoPreview = document.getElementById('photoPreview');
+    var photoBase64 = null, photoMime = null, photoName = null;
+
+    // Gender pill selection styling
+    document.querySelectorAll('#genderRow .pill').forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        document.querySelectorAll('#genderRow .pill').forEach(function (p) { p.classList.remove('selected'); });
+        pill.classList.add('selected');
+        pill.querySelector('input').checked = true;
+      });
+    });
+
+    function fillSelect(select, items, placeholder) {
+      select.innerHTML = '';
+      var ph = document.createElement('option');
+      ph.value = ''; ph.textContent = placeholder;
+      select.appendChild(ph);
+      items.forEach(function (item) {
+        var opt = document.createElement('option');
+        opt.value = item; opt.textContent = item;
+        select.appendChild(opt);
+      });
+      select.disabled = false;
+    }
+
+    // Load LGAs on page load.
+    google.script.run.withSuccessHandler(function (lgas) {
+      fillSelect(lgaSelect, lgas, 'Select LGA');
+    }).withFailureHandler(function (err) {
+      lgaSelect.innerHTML = '<option value="">Failed to load — refresh page</option>';
+    }).getLgas();
+
+    lgaSelect.addEventListener('change', function () {
+      wardSelect.innerHTML = '<option value="">Loading wards…</option>';
+      wardSelect.disabled = true;
+      puSelect.innerHTML = '<option value="">Select Ward first</option>';
+      puSelect.disabled = true;
+      if (!lgaSelect.value) return;
+      google.script.run.withSuccessHandler(function (wards) {
+        fillSelect(wardSelect, wards, 'Select Ward');
+      }).getWards(lgaSelect.value);
+    });
+
+    wardSelect.addEventListener('change', function () {
+      puSelect.innerHTML = '<option value="">Loading polling units…</option>';
+      puSelect.disabled = true;
+      if (!wardSelect.value) return;
+      google.script.run.withSuccessHandler(function (pus) {
+        puSelect.innerHTML = '';
+        var ph = document.createElement('option');
+        ph.value = ''; ph.textContent = 'Select Polling Unit';
+        puSelect.appendChild(ph);
+        pus.forEach(function (p) {
+          var opt = document.createElement('option');
+          opt.value = JSON.stringify(p);
+          opt.textContent = p.name + ' [' + p.code + ']';
+          puSelect.appendChild(opt);
+        });
+        puSelect.disabled = false;
+      }).getPus(lgaSelect.value, wardSelect.value);
+    });
+
+    photoInput.addEventListener('change', function () {
+      var file = photoInput.files[0];
+      photoPreview.style.display = 'none';
+      photoBase64 = null;
+      if (!file) return;
+      if (file.size > 4 * 1024 * 1024) {
+        document.getElementById('photoError').style.display = 'block';
+        photoInput.value = '';
+        return;
+      }
+      document.getElementById('photoError').style.display = 'none';
+      photoMime = file.type || 'image/jpeg';
+      photoName = file.name;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        photoBase64 = e.target.result;
+        photoPreview.src = photoBase64;
+        photoPreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('phone').addEventListener('input', function () {
+      document.getElementById('phoneError').style.display = 'none';
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      resultMsg.className = 'msg';
+      resultMsg.style.display = 'none';
+
+      var gender = form.querySelector('input[name=gender]:checked');
+      var phone = document.getElementById('phone');
+      if (!phone.checkValidity()) {
+        document.getElementById('phoneError').style.display = 'block';
+        phone.focus();
+        return;
+      }
+      if (!gender) {
+        resultMsg.textContent = 'Please select a gender.';
+        resultMsg.className = 'msg error';
+        return;
+      }
+      if (!photoBase64) {
+        document.getElementById('photoError').style.display = 'block';
+        return;
+      }
+
+      var puVal = puSelect.value ? JSON.parse(puSelect.value) : null;
+      if (!puVal) {
+        resultMsg.textContent = 'Please select a Polling Unit.';
+        resultMsg.className = 'msg error';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span>Submitting…';
+
+      var payload = {
+        name: document.getElementById('name').value.trim(),
+        phone: phone.value.trim(),
+        email: document.getElementById('email').value.trim(),
+        gender: gender.value,
+        voterId: document.getElementById('voterId').value.trim(),
+        state: document.getElementById('state').value,
+        lga: lgaSelect.value,
+        ward: wardSelect.value,
+        pu: puVal.name,
+        puCode: puVal.code,
+        photoBase64: photoBase64,
+        photoMime: photoMime,
+        photoName: photoName
+      };
+
+      google.script.run.withSuccessHandler(function (res) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Registration';
+        if (res && res.success) {
+          resultMsg.textContent = 'Registration submitted successfully. Thank you!';
+          resultMsg.className = 'msg success';
+          form.reset();
+          photoPreview.style.display = 'none';
+          photoBase64 = null;
+          document.querySelectorAll('#genderRow .pill').forEach(function (p) { p.classList.remove('selected'); });
+          wardSelect.innerHTML = '<option value="">Select LGA first</option>';
+          wardSelect.disabled = true;
+          puSelect.innerHTML = '<option value="">Select Ward first</option>';
+          puSelect.disabled = true;
+        } else {
+          resultMsg.textContent = (res && res.error) ? res.error : 'Something went wrong. Please try again.';
+          resultMsg.className = 'msg error';
+        }
+      }).withFailureHandler(function (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Registration';
+        resultMsg.textContent = 'Network/server error: ' + err.message;
+        resultMsg.className = 'msg error';
+      }).submitRegistration(payload);
+    });
+  </script>
+</body>
+</html>
